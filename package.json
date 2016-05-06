@@ -11,6 +11,9 @@
     "build": "babel ./modules -d lib && webpack modules/index.js umd/fetch-http-client.js && webpack -p modules/index.js umd/fetch-http-client.min.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/starlight36/fetch-http-client.git"
