@@ -35,7 +35,7 @@ export default class HttpClient {
     return this;
   }
 
-  request(path:string, options) {
+  fetch(path:string, options) {
     if (typeof fetch !== "function") {
       throw new TypeError("fetch() function not available");
     }
@@ -59,6 +59,30 @@ export default class HttpClient {
       (promise, middleware) => promise.then(response => middleware(response) || response),
       Promise.resolve(response)
     ));
+  }
+
+  request(path:string, method:string, options = {}) {
+    return this.fetch(path, { ...options, method });
+  }
+
+  get(path:string, options = {}) {
+    return this.request(path, 'GET', options);
+  }
+
+  post(path:string, options = {}) {
+    return this.request(path, 'POST', options);
+  }
+
+  put(path:string, options = {}) {
+    return this.request(path, 'PUT', options);
+  }
+
+  delete(path:string, options = {}) {
+    return this.request(path, 'DELETE', options);
+  }
+
+  patch(path:string, options = {}) {
+    return this.request(path, 'PATCH', options);
   }
 
   _resolveUrl(path:string, query = {}) {
