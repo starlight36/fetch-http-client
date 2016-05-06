@@ -1,12 +1,6 @@
-/**
- * @flow
- */
 import { stringify } from 'query-string';
 
-export default class HttpClient {
-  baseUrl:string;
-  middlewareId:number;
-  middlewares:Array<any>;
+export default class FetchHttpClient {
 
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
@@ -25,7 +19,7 @@ export default class HttpClient {
 
   removeMiddleware(middleware) {
     if (!middleware.middlewareId) {
-      return;
+      return this;
     }
 
     if (this.middlewares[middleware.middlewareId]) {
@@ -35,14 +29,14 @@ export default class HttpClient {
     return this;
   }
 
-  fetch(path:string, options) {
-    if (typeof fetch !== "function") {
-      throw new TypeError("fetch() function not available");
+  fetch(path, options = {}) {
+    if (typeof fetch !== 'function') {
+      throw new TypeError('fetch() function not available');
     }
 
     options = { headers: {}, ...options };
 
-    const url = this._resolveUrl(path);
+    const url = this.resolveUrl(path);
     const responseMiddlewares = [];
     const requestPromise = this.middlewares.reduce(
       (promise, middleware) => promise.then(request => {
@@ -61,76 +55,76 @@ export default class HttpClient {
     ));
   }
 
-  request(path:string, method:string, options = {}) {
+  request(path, method, options = {}) {
     return this.fetch(path, { ...options, method });
   }
 
-  get(path:string, options = {}) {
+  get(path, options = {}) {
     return this.request(path, 'GET', options);
   }
 
-  post(path:string, options = {}) {
+  post(path, options = {}) {
     return this.request(path, 'POST', options);
   }
 
-  put(path:string, options = {}) {
+  put(path, options = {}) {
     return this.request(path, 'PUT', options);
   }
 
-  delete(path:string, options = {}) {
+  delete(path, options = {}) {
     return this.request(path, 'DELETE', options);
   }
 
-  patch(path:string, options = {}) {
+  patch(path, options = {}) {
     return this.request(path, 'PATCH', options);
   }
 
-  _resolveUrl(path:string, query = {}) {
+  resolveUrl(path) {
     if (path.toLowerCase().startsWith('http://')
       || path.toLowerCase().startsWith('https://')
       || path.startsWith('//')) {
       return path;
     }
 
-    let baseUrl = this.baseUrl.replace(/(^\/+|\/+$)/g, '');
+    const baseUrl = this.baseUrl.replace(/(^\/+|\/+$)/g, '');
     let fullUrl = '';
 
     if (path.startsWith('/')) {
       const rootPos = baseUrl.indexOf('/', baseUrl.indexOf('//') + 2);
       fullUrl = baseUrl.substr(0, rootPos) + path;
     } else {
-      fullUrl = baseUrl + '/' + path;
+      fullUrl = `${baseUrl}/${path}`;
     }
 
     return fullUrl;
   }
-};
+}
 
-export const query = config => request => {
+export const query = () => request => {
   if (request.options.query) {
     const queryString = stringify(request.options.query);
     if (request.url.indexOf('?') === -1) {
-      request.url = request.url + '?';
+      request.url = request.url.concat('?');
     }
     if (request.url.endsWith('&')) {
       request.url = request.url + queryString;
     } else {
-      request.url = request.url + '&' + queryString;
+      request.url = request.url.concat('&', queryString);
     }
   }
 };
 
-export const form = config => request => {
+export const form = () => request => {
   if (request.options.form) {
     request.options.body = stringify(request.options.form);
     request.options.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
   }
 };
 
-export const json = config => request => {
+export const json = () => request => {
   if (request.options.json) {
     request.options.body = JSON.stringify(request.options.json);
-    request.options.headers['Accept'] = 'application/json';
+    request.options.headers.Accept = 'application/json';
     request.options.headers['Content-Type'] = 'application/json';
   }
 
@@ -143,8 +137,6 @@ export const header = headers => request => {
 
 export const userAgent = ua => request => {
   const uaSegments = [];
-  for (const key in ua) {
-    uaSegments.push(key + '/' + ua[key]);
-  }
+  new Map(ua).forEach((value, key) => uaSegments.push(`${key}/${value}`));
   request.options.headers['User-Agent'] = uaSegments.join(' ');
 };
