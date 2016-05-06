@@ -1,4 +1,9 @@
-class HttpClient {
+/**
+ * @flow
+ */
+import { stringify } from 'query-string';
+
+export default class HttpClient {
   baseUrl:string;
   middlewareId:number;
   middlewares:Array<any>;
@@ -35,7 +40,7 @@ class HttpClient {
       throw new TypeError("fetch() function not available");
     }
 
-    options = { headers: {}, ...options};
+    options = { headers: {}, ...options };
 
     const url = this._resolveUrl(path);
     const responseMiddlewares = [];
@@ -50,7 +55,7 @@ class HttpClient {
       Promise.resolve({ url, path, options })
     ).then(request => fetch(request.url, request.options));
 
-    return requestPromise.then((response) => responseMiddlewares.reduce(
+    return requestPromise.then(response => responseMiddlewares.reduce(
       (promise, middleware) => promise.then(response => middleware(response) || response),
       Promise.resolve(response)
     ));
@@ -75,6 +80,47 @@ class HttpClient {
 
     return fullUrl;
   }
-}
+};
 
-export default HttpClient;
+export const query = config => request => {
+  if (request.options.query) {
+    const queryString = stringify(request.options.query);
+    if (request.url.indexOf('?') === -1) {
+      request.url = request.url + '?';
+    }
+    if (request.url.endsWith('&')) {
+      request.url = request.url + queryString;
+    } else {
+      request.url = request.url + '&' + queryString;
+    }
+  }
+};
+
+export const form = config => request => {
+  if (request.options.form) {
+    request.options.body = stringify(request.options.form);
+    request.options.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+  }
+};
+
+export const json = config => request => {
+  if (request.options.json) {
+    request.options.body = JSON.stringify(request.options.json);
+    request.options.headers['Accept'] = 'application/json';
+    request.options.headers['Content-Type'] = 'application/json';
+  }
+
+  return response => response.json();
+};
+
+export const header = headers => request => {
+  request.options.headers = { ...request.options.headers, headers };
+};
+
+export const userAgent = ua => request => {
+  const uaSegments = [];
+  for (const key in ua) {
+    uaSegments.push(key + '/' + ua[key]);
+  }
+  request.options.headers['User-Agent'] = uaSegments.join(' ');
+};
