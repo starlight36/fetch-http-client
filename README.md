@@ -135,7 +135,7 @@ instance.patch(uri:string[, options: object])
 
 This middleware could add the ability to append object value to query string:
 
-```
+```js
 // Add query middleware
 client.addMiddleware(query());
 
@@ -154,7 +154,7 @@ It will request to `http://api.example.com/endpoint/test?foo=FOO&bar=BAR`.
 
 Like `query`, this could be used to handle post form values.
 
-```
+```js
 // Add form middleware
 client.addMiddleware(form());
 
@@ -171,7 +171,7 @@ client.post('test', {
 
 A convenience middleware to add headers to request.
 
-```
+```js
 // Add header middleware
 client.addMiddleware(header({
   'X-Request-By': 'FetchHttpClient',
@@ -183,7 +183,7 @@ client.addMiddleware(header({
 
 A convenience middleware to set User-Agent to headers.
 
-```
+```js
 // Add header middleware
 client.addMiddleware(userAgent({
   'Client': '1.1',
@@ -195,7 +195,7 @@ client.addMiddleware(userAgent({
 
 Convert object to request and parse from response.
 
-```
+```js
 // Add json middleware
 client.addMiddleware(json());
 
