@@ -128,7 +128,10 @@ export const json = () => request => {
     request.options.headers['Content-Type'] = 'application/json';
   }
 
-  return response => response.json();
+  return response => response.json().then(json => {
+    response.jsonData = json;
+    return response;
+  });
 };
 
 export const header = headers => request => {

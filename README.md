@@ -44,7 +44,7 @@ client.addMiddleware(request => response => {
 });
 
 // Fire request.
-client.get('test').then(json => console.log(json));
+client.get('test').then(response => console.log(response.jsonData));
 ```
 
 ## Asynchronous pre-request middleware
@@ -204,8 +204,8 @@ client.post('add', {
   json: {
     foo: 'FOO',
   },
-}).then(json => {
-  console.log(json);
+}).then(response => {
+  console.log(response.jsonData);
 });
 ```
 
