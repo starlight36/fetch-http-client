@@ -3,7 +3,7 @@ import { stringify } from 'query-string';
 export default class FetchHttpClient {
 
   constructor(baseUrl) {
-    this.baseUrl = baseUrl;
+    this.baseUrl = baseUrl || '';
     this.middlewareId = 1;
     this.middlewares = [];
   }
