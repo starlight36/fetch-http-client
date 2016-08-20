@@ -1,6 +1,6 @@
 {
   "name": "fetch-http-client",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A http client wrapper for fetch api with middleware support.",
   "main": "lib",
   "files": [
@@ -10,7 +10,8 @@
   "scripts": {
     "lint": "eslint modules",
     "build": "babel ./modules -d lib && webpack modules/index.js umd/fetch-http-client.js && webpack -p modules/index.js umd/fetch-http-client.min.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf lib umd"
   },
   "pre-commit": [
     "lint"
