@@ -1,6 +1,6 @@
 # Fetch Http Client
 
-[![Build Status](https://travis-ci.org/starlight36/fetch-http-client.svg?branch=master)](https://travis-ci.org/starlight36/fetch-http-client)
+[![npm version](https://badge.fury.io/js/fetch-http-client.svg)](https://badge.fury.io/js/fetch-http-client) [![Build Status](https://travis-ci.org/starlight36/fetch-http-client.svg?branch=master)](https://travis-ci.org/starlight36/fetch-http-client) [![Coverage Status](https://coveralls.io/repos/github/starlight36/fetch-http-client/badge.svg)](https://coveralls.io/github/starlight36/fetch-http-client)
 
 A http client wrapper for [Fetch API](https://github.com/whatwg/fetch) with middleware support.
 
