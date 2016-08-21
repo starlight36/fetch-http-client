@@ -6,6 +6,10 @@ node_js:
   - "5.11"
   - "6.3"
 sudo: false
+cache:
+  bundler: true
+  directories:
+    - node_modules
 before_install:
   - "npm install"
 script:
