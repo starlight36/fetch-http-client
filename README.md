@@ -1,5 +1,7 @@
 # Fetch Http Client
 
+[![Build Status](https://travis-ci.org/starlight36/fetch-http-client.svg?branch=master)](https://travis-ci.org/starlight36/fetch-http-client)
+
 A http client wrapper for [Fetch API](https://github.com/whatwg/fetch) with middleware support.
 
 # Introduction
