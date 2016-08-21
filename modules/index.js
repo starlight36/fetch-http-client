@@ -86,12 +86,12 @@ export default class FetchHttpClient {
       return path;
     }
 
-    const baseUrl = this.baseUrl.replace(/(^\/+|\/+$)/g, '');
+    const baseUrl = this.baseUrl.replace(/\/+$/g, '');
     let fullUrl = '';
 
     if (path.startsWith('/')) {
       const rootPos = baseUrl.indexOf('/', baseUrl.indexOf('//') + 2);
-      fullUrl = baseUrl.substr(0, rootPos) + path;
+      fullUrl = baseUrl.substr(0, rootPos === -1 ? undefined : rootPos) + path;
     } else {
       fullUrl = `${baseUrl}/${path}`;
     }
@@ -106,8 +106,8 @@ export const query = () => request => {
     if (request.url.indexOf('?') === -1) {
       request.url = request.url.concat('?');
     }
-    if (request.url.endsWith('&')) {
-      request.url = request.url + queryString;
+    if (request.url.endsWith('&') || request.url.endsWith('?')) {
+      request.url = request.url.concat(queryString);
     } else {
       request.url = request.url.concat('&', queryString);
     }
@@ -128,18 +128,19 @@ export const json = () => request => {
     request.options.headers['Content-Type'] = 'application/json';
   }
 
-  return response => response.json().then(json => {
-    response.jsonData = json;
-    return response;
-  });
+  return response => {
+    const contentType = response.headers.get('Content-Type') || '';
+    if (contentType.indexOf('json') === -1) return response;
+    return response.json().then(json => (response.jsonData = json, response));
+  };
 };
 
 export const header = headers => request => {
-  request.options.headers = { ...request.options.headers, headers };
+  request.options.headers = { ...request.options.headers, ...headers };
 };
 
 export const userAgent = ua => request => {
   const uaSegments = [];
-  new Map(ua).forEach((value, key) => uaSegments.push(`${key}/${value}`));
+  Object.keys(ua).forEach(key => uaSegments.push(`${key}/${ua[key]}`));
   request.options.headers['User-Agent'] = uaSegments.join(' ');
 };

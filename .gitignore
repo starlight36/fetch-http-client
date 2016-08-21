@@ -1,5 +1,6 @@
 .idea/
 .npm/
+coverage/
 node_modules/
 lib/
 umd/
