@@ -144,3 +144,7 @@ export const userAgent = ua => request => {
   Object.keys(ua).forEach(key => uaSegments.push(`${key}/${ua[key]}`));
   request.options.headers['User-Agent'] = uaSegments.join(' ');
 };
+
+export const credentials = credentials => request => {
+  request.options.credentials = credentials;
+};

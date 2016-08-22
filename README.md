@@ -211,6 +211,15 @@ client.post('add', {
 });
 ```
 
+### credentials
+
+Set credentials options to fetch. If you want to automatically send cookies for the current domain, use this middleware and config it as `same-origin`.
+
+```js
+// Add credentials middleware
+client.addMiddleware(credentials('same-origin'));
+```
+
 # Feedback
 
 If you have any questions, use [Issues](https://github.com/starlight36/fetch-http-client/issues).
