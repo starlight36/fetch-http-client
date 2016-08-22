@@ -213,7 +213,7 @@ client.post('add', {
 
 # Feedback
 
-If you any questions, use [Issues](https://github.com/starlight36/fetch-http-client/issues).
+If you have any questions, use [Issues](https://github.com/starlight36/fetch-http-client/issues).
 
 Sina Weibo: [@starlight36](http://weibo.com/starlight36)
 
