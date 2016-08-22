@@ -1,5 +1,5 @@
 import assert from 'assert';
-import FetchHttpClient, { query, form, json, header, userAgent } from '../modules';
+import FetchHttpClient, { query, form, json, header, userAgent, credentials } from '../modules';
 
 describe('FetchHttpClient', () => {
   it('should be a class.', () => {
@@ -202,5 +202,15 @@ describe('Middleware userAgent', () => {
     };
     userAgent({ Test: 'test', Test2: 'test2' })(request);
     assert.equal(request.options.headers['User-Agent'], 'Test/test Test2/test2');
+  });
+});
+
+describe('Middleware credentials', () => {
+  it('should set credentials options on request.', () => {
+    const request = {
+      options: {},
+    };
+    credentials('same-origin')(request);
+    assert.equal(request.options.credentials, 'same-origin');
   });
 });
