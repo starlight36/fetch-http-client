@@ -124,9 +124,9 @@ export const form = () => request => {
 export const json = () => request => {
   if (request.options.json) {
     request.options.body = JSON.stringify(request.options.json);
-    request.options.headers.Accept = 'application/json';
     request.options.headers['Content-Type'] = 'application/json';
   }
+  request.options.headers.Accept = 'application/json';
 
   return response => {
     const contentType = response.headers.get('Content-Type') || '';

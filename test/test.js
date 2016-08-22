@@ -178,6 +178,30 @@ describe('Middleware json', done => {
     assert.equal(request.options.headers['Content-Type'], 'application/json');
     assert.equal(request.options.headers.Accept, 'application/json');
   });
+
+  it('should handle request without body and response.', () => {
+    const request = {
+      options: {
+        headers: {},
+      },
+    };
+
+    const response = {
+      headers: {
+        get: key => {
+          assert.equal(key, 'Content-Type');
+          return 'application/json';
+        },
+      },
+      json: () => Promise.resolve(({ key: 'value' })),
+    };
+
+    json()(request)(response).then(response => {
+      assert.equal(response.jsonData, { key: 'value' });
+      done();
+    });
+    assert.equal(request.options.headers.Accept, 'application/json');
+  });
 });
 
 
