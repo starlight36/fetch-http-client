@@ -36,7 +36,7 @@ export default class FetchHttpClient {
 
     options = { headers: {}, ...options };
 
-    const url = this.resolveUrl(path);
+    const url = this.resolveUrl(path, options.uriParams || {});
     const responseMiddlewares = [];
     const requestPromise = this.middlewares.reduce(
       (promise, middleware) => promise.then(request => {
@@ -79,7 +79,7 @@ export default class FetchHttpClient {
     return this.request(path, 'PATCH', options);
   }
 
-  resolveUrl(path) {
+  resolveUrl(path, variables = {}) {
     if (path.toLowerCase().startsWith('http://')
       || path.toLowerCase().startsWith('https://')
       || path.startsWith('//')) {
@@ -95,6 +95,11 @@ export default class FetchHttpClient {
     } else {
       fullUrl = `${baseUrl}/${path}`;
     }
+
+    fullUrl = fullUrl.replace(/\{(\w+)\}/ig, (match, group) => {
+      if (!variables[group]) throw new Error(`Unknown path variable '${group}'.`);
+      return encodeURIComponent(variables[group]);
+    });
 
     return fullUrl;
   }

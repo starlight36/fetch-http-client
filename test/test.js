@@ -17,13 +17,13 @@ describe('FetchHttpClient', () => {
     global.fetch = () => Promise.resolve({ status: 200 });
     return new FetchHttpClient('http://mydomain.com')
       .addMiddleware(request => {
-        assert.equal(request.url, 'http://mydomain.com/test');
+        assert.equal(request.url, 'http://mydomain.com/test/1');
         Promise.resolve('dumy-token')
           .then(token => (request.options.headers.Token = token, request));
       })
       .addMiddleware(request => assert.equal(request.options.headers.Token, 'dumy-token'))
       .addMiddleware(() => response => (response.status1 = response.status, response))
-      .fetch('/test', { method: 'GET' })
+      .fetch('/test/{id}', { method: 'GET', uriParams: { id: 1 } })
       .then(response => {
         assert.equal(response.status, 200);
         assert.equal(response.status1, 200);
@@ -75,6 +75,15 @@ describe('FetchHttpClient', () => {
     assert.equal('http://site.com/test/path', client.resolveUrl('http://site.com/test/path'));
     assert.equal('https://site.com/test/path', client.resolveUrl('https://site.com/test/path'));
     assert.equal('//site.com/test/path', client.resolveUrl('//site.com/test/path'));
+    assert.equal('http://mydomain.com/api/1', client.resolveUrl('api/{id}', { id: 1 }));
+    assert.equal('http://mydomain.com/api/1/test', client.resolveUrl('api/{id}/{name}', { id: 1, name: 'test' }));
+    assert.equal('http://mydomain.com/api/%E6%B1%89%E5%AD%97', client.resolveUrl('api/{name}', { name: '汉字' }));
+    try {
+      client.resolveUrl('api/{unknown}');
+      assert.fail('Should throw exception when a unknown variable in path.');
+    } catch (ex) {
+      assert.equal('Unknown path variable \'unknown\'.', ex.message);
+    }
     client = new FetchHttpClient('http://mydomain.com/api');
     assert.equal('http://mydomain.com/test', client.resolveUrl('/test'));
     assert.equal('http://mydomain.com/api/test', client.resolveUrl('test'));

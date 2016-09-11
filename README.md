@@ -47,6 +47,9 @@ client.addMiddleware(request => response => {
 
 // Fire request.
 client.get('test').then(response => console.log(response.jsonData));
+
+// Path variables support.
+client.get('users/{id}', { uriParams: { id: 1 } }).then(response => console.log(response.jsonData));
 ```
 
 ## Asynchronous pre-request middleware
