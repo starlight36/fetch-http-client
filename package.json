@@ -1,6 +1,6 @@
 {
   "name": "fetch-http-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A http client wrapper for fetch api with middleware support.",
   "main": "lib",
   "files": [
