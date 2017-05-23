@@ -29,7 +29,7 @@ export default class FetchHttpClient {
     return this;
   }
 
-  fetch(path, options = {}) {
+  async fetch(path, options = {}) {
     if (typeof fetch !== 'function') {
       throw new TypeError('fetch() function not available');
     }
@@ -55,28 +55,28 @@ export default class FetchHttpClient {
     ));
   }
 
-  request(path, method, options = {}) {
-    return this.fetch(path, { ...options, method });
+  async request(path, method, options = {}) {
+    return await this.fetch(path, { ...options, method });
   }
 
-  get(path, options = {}) {
-    return this.request(path, 'GET', options);
+  async get(path, options = {}) {
+    return await this.request(path, 'GET', options);
   }
 
-  post(path, options = {}) {
-    return this.request(path, 'POST', options);
+  async post(path, options = {}) {
+    return await this.request(path, 'POST', options);
   }
 
-  put(path, options = {}) {
-    return this.request(path, 'PUT', options);
+  async put(path, options = {}) {
+    return await this.request(path, 'PUT', options);
   }
 
-  delete(path, options = {}) {
-    return this.request(path, 'DELETE', options);
+  async delete(path, options = {}) {
+    return await this.request(path, 'DELETE', options);
   }
 
-  patch(path, options = {}) {
-    return this.request(path, 'PATCH', options);
+  async patch(path, options = {}) {
+    return await this.request(path, 'PATCH', options);
   }
 
   resolveUrl(path, variables = {}) {
