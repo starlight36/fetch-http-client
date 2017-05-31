@@ -212,6 +212,14 @@ client.post('add', {
 }).then(response => {
   console.log(response.jsonData);
 });
+
+// Example
+let postBody = {firstName: 'hello', lastName: 'world'};
+
+client.request('profile', 'PUT', {json: postBody})
+  .then(resp => {
+    console.log(resp.jsonData);
+  });
 ```
 
 ### credentials
