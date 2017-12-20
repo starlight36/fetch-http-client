@@ -1,5 +1,13 @@
 import assert from 'assert';
-import FetchHttpClient, { query, form, json, header, userAgent, credentials, timeout } from '../modules';
+import FetchHttpClient, {
+  query,
+  form,
+  json,
+  header,
+  userAgent,
+  credentials,
+  timeout,
+} from '../modules';
 
 describe('FetchHttpClient', () => {
   it('should be a class.', () => {
