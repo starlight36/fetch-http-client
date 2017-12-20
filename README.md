@@ -214,6 +214,15 @@ client.post('add', {
 });
 ```
 
+### timeout
+
+Set timeout options to fetch.
+
+```js
+// Add timeout middleware
+client.addMiddleware(timeout(1000));
+```
+
 ### credentials
 
 Set credentials options to fetch. If you want to automatically send cookies for the current domain, use this middleware and config it as `same-origin`.

@@ -153,3 +153,11 @@ export const userAgent = ua => request => {
 export const credentials = credentials => request => {
   request.options.credentials = credentials;
 };
+
+export const timeout = (s) => request => {
+  if (typeof parseInt(s, 10) !== 'number') throw new TypeError('function params not available');
+
+  const abort = new Promise((resolve, reject) => setTimeout(reject, s, 'request timeout!'));
+
+  return Promise.race([request, abort]);
+};
