@@ -1,5 +1,13 @@
 import assert from 'assert';
-import FetchHttpClient, { query, form, json, header, userAgent, credentials } from '../modules';
+import FetchHttpClient, {
+  query,
+  form,
+  json,
+  header,
+  userAgent,
+  credentials,
+  timeout,
+} from '../modules';
 
 describe('FetchHttpClient', () => {
   it('should be a class.', () => {
@@ -245,5 +253,27 @@ describe('Middleware credentials', () => {
     };
     credentials('same-origin')(request);
     assert.equal(request.options.credentials, 'same-origin');
+  });
+});
+
+describe('Middleware timeout', () => {
+  it('should set timeout options on request.', () => {
+    const request = new Promise(resolve => {
+      setTimeout(resolve, 200, 'success!');
+    });
+
+    timeout(300)(request).then(res => {
+      assert.equal(res, 'success!');
+    });
+  });
+
+  it('should set timeout options on request. With timeout.', () => {
+    const request = new Promise(resolve => {
+      setTimeout(resolve, 200, 'success!');
+    });
+
+    timeout(100)(request).catch(err => {
+      assert.equal(err, 'request timeout!');
+    });
   });
 });
