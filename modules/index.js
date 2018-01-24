@@ -46,13 +46,8 @@ export default class FetchHttpClient {
         }
         return (result && typeof result !== 'function') ? result : request;
       }),
-      Promise.resolve({ url, path, options })
-    ).then(request => {
-      const { url, options, setTimeout } = request;
-      const fetchRequest = fetch(url, options);
-
-      return setTimeout ? setTimeout(fetchRequest) : fetchRequest;
-    });
+      Promise.resolve({ url, path, options, fetch })
+    ).then(request => request.fetch(request.url, request.options));
 
     return requestPromise.then(response => responseMiddlewares.reduce(
       (promise, middleware) => promise.then(response => middleware(response) || response),
@@ -163,10 +158,9 @@ export const timeout = globalTimeout => request => {
   const ms = parseInt(request.options.timeout || globalTimeout, 10);
 
   if (ms) {
-    request.setTimeout = (request) => {
-      const abort = new Promise((resolve, reject) => setTimeout(reject, ms, 'request timeout!'));
+    const fetchRequest = request.fetch;
+    const abort = new Promise((resolve, reject) => setTimeout(reject, ms, 'request timeout!'));
 
-      return Promise.race([request, abort]);
-    };
+    request.fetch = (url, options) => Promise.race([fetchRequest(url, options), abort]);
   }
 };
