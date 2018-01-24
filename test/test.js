@@ -268,7 +268,7 @@ describe('Middleware timeout', () => {
     return client.get('/test').then(res => {
       assert.equal(res, 'success!');
     });
-  });
+  }).timeout(5000);
 
   it('should set timeout options on global, with timeout.', () => {
     global.fetch = () => new Promise(resolve => {
@@ -281,7 +281,7 @@ describe('Middleware timeout', () => {
     return client.get('/test').catch((err) => {
       assert.equal(err, 'request timeout!');
     });
-  });
+  }).timeout(5000);
 
   it('should set timeout options on request method.', () => {
     global.fetch = () => new Promise(resolve => {
@@ -296,6 +296,6 @@ describe('Middleware timeout', () => {
     }).then((res) => {
       assert.equal(res, 'success!');
     });
-  });
+  }).timeout(5000);
 });
 
