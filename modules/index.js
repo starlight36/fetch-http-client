@@ -47,7 +47,12 @@ export default class FetchHttpClient {
         return (result && typeof result !== 'function') ? result : request;
       }),
       Promise.resolve({ url, path, options })
-    ).then(request => fetch(request.url, request.options));
+    ).then(request => {
+      const { url, options, setTimeout } = request;
+      const fetchRequest = fetch(url, options);
+
+      return setTimeout ? setTimeout(fetchRequest) : fetchRequest;
+    });
 
     return requestPromise.then(response => responseMiddlewares.reduce(
       (promise, middleware) => promise.then(response => middleware(response) || response),
@@ -154,10 +159,14 @@ export const credentials = credentials => request => {
   request.options.credentials = credentials;
 };
 
-export const timeout = (s) => request => {
-  if (typeof parseInt(s, 10) !== 'number') throw new TypeError('function params not available');
+export const timeout = globalTimeout => request => {
+  const ms = parseInt(request.options.timeout || globalTimeout, 10);
 
-  const abort = new Promise((resolve, reject) => setTimeout(reject, s, 'request timeout!'));
+  if (ms) {
+    request.setTimeout = (request) => {
+      const abort = new Promise((resolve, reject) => setTimeout(reject, ms, 'request timeout!'));
 
-  return Promise.race([request, abort]);
+      return Promise.race([request, abort]);
+    };
+  }
 };
