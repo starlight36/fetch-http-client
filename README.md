@@ -219,8 +219,13 @@ client.post('add', {
 Set timeout options to fetch.
 
 ```js
-// Add timeout middleware
+// global timeout option
 client.addMiddleware(timeout(1000));
+
+// Request timeout option priority global timeout option
+client.get('test', {
+  timeout: 2000, // If you not add timeout middleware, it will not take effect
+});
 ```
 
 ### credentials

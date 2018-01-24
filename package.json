@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "lint": "eslint modules test",
-    "test": "mocha --compilers js:babel-core/register --reporter spec --bail test/",
+    "test": "mocha -t 5000 --compilers js:babel-core/register --reporter spec --bail test/",
     "test-cov": "babel-node ./node_modules/.bin/babel-istanbul cover _mocha -- --reporter dot test/",
     "test-travis": "babel-node ./node_modules/.bin/babel-istanbul cover _mocha --report lcovonly -- --reporter dot test/",
     "build": "babel ./modules -d lib && webpack modules/index.js umd/fetch-http-client.js && webpack -p modules/index.js umd/fetch-http-client.min.js",
